@@ -48,10 +48,19 @@ function successResponse(res, message, data, status = 200) {
 }
 
 function errorResponse(res, message, status, details = null) {
-    return res.startus(status).json({
+    return res.status(status).json({
         success: false,
         message,
         data: null,
         error: details,
     })
 }
+
+// JOI VALIDATION SCHEMAS
+
+const biodataSchema = joi.object({
+    id: joi.number().integer().positive(),
+    nama: joi.string().trim().min(2).max(100).required(),
+    nim: joi.string().trim().min(5).max(20).required(),
+    kelas: joi.string().trim().min(1).max(20).required(),
+})
