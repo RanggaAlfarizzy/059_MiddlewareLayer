@@ -145,7 +145,7 @@ app.post(
         return successResponse(
             res,
             'data berhasil ditambahkan',
-            result.row[0],
+            result.rows[0],
             201
         )
     }
@@ -154,10 +154,10 @@ app.post(
 app.put(
     '/biodata/:id',
     validateIdParams(idSchema),
-    validateBody(biodataSchema.fork),
+    validateBody(biodataSchema.fork(
      ['nama', 'nim', 'kelas'],
      fields => fields.required()    
-    ).fork(['id'], fields => fields.forbidden()),
+    ).fork(['id'], fields => fields.forbidden())),
     async (req, res) => {
         const { id } = req.params
         const { nama, nim, kelas } = req.body
@@ -177,6 +177,7 @@ app.put(
         return successResponse(res, 'Data berhasil diperbarui', result.rows[0]
         )
     }
+)
 
 app.delete(
     '/biodata/:id',
@@ -185,7 +186,7 @@ app.delete(
         const { id } = req.params 
 
         const result = await pool.query(
-            `DELETE FROM biodata WHERE did = $1 RETURNING *`,
+            `DELETE FROM biodata WHERE id = $1 RETURNING *`,
             [id]
         )
 
